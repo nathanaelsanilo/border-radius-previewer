@@ -1,58 +1,70 @@
+import * as Form from '@radix-ui/react-form';
 import { useState } from 'react';
-import logo from './logo.svg';
+import { useForm } from 'react-hook-form';
 import './App.css';
+import Box from './component/Box';
+
+type FormField = {
+  topLeft: number;
+  topRight: number;
+  botLeft: number;
+  botRight: number;
+};
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [form, setForm] = useState<FormField>({
+    topLeft: 0,
+    topRight: 0,
+    botLeft: 0,
+    botRight: 0,
+  });
+  const { handleSubmit, register } = useForm<FormField>({
+    defaultValues: {
+      topLeft: 0,
+      topRight: 0,
+      botLeft: 0,
+      botRight: 0,
+    },
+  });
+  const onSubmit = handleSubmit((val) => {
+    setForm(() => ({ ...val }));
+  });
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Vite + React + TypeScript + Airbnb + Husky = 🔥</p>
-        <p>
-          <button className="rainbow-button" type="button" onClick={() => setCount((prevCount) => prevCount + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-          {' | '}
-          <a className="App-link" href="https://github.com/typicode/husky" target="_blank" rel="noopener noreferrer">
-            Husky Docs
-          </a>
-          {' | '}
-          <a className="App-link" href="https://github.com/airbnb/javascript" target="_blank" rel="noopener noreferrer">
-            Airbnb JS Style Guide
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://github.com/airbnb/javascript/tree/master/react"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Airbnb React Style Guide
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://github.com/alessandropisu/vite-react-ts-minimal-template"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Template repository
-          </a>
-        </p>
-      </header>
-    </div>
+    <main className="container mx-auto h-full">
+      <div className="grid grid-cols-2 place-items-center h-full">
+        <Form.Root onSubmit={onSubmit} className="flex flex-col gap-y-2 max-w-md w-full">
+          <Form.Field name="top_left" className="flex flex-row justify-between items-center gap-2">
+            <Form.Label>Top Left</Form.Label>
+            <Form.Control asChild>
+              <input type="number" {...register('topLeft', { valueAsNumber: true })} />
+            </Form.Control>
+          </Form.Field>
+          <Form.Field name="top_right" className="flex flex-row justify-between items-center gap-2">
+            <Form.Label>Top Right</Form.Label>
+            <Form.Control asChild>
+              <input type="number" {...register('topRight', { valueAsNumber: true })} />
+            </Form.Control>
+          </Form.Field>
+          <Form.Field name="bot_left" className="flex flex-row justify-between items-center gap-2">
+            <Form.Label>Bottom Left</Form.Label>
+            <Form.Control asChild>
+              <input type="number" {...register('botLeft', { valueAsNumber: true })} />
+            </Form.Control>
+          </Form.Field>
+          <Form.Field name="bot_right" className="flex flex-row justify-between items-center gap-2">
+            <Form.Label>Bottom Right</Form.Label>
+            <Form.Control asChild>
+              <input type="number" {...register('botRight', { valueAsNumber: true })} />
+            </Form.Control>
+          </Form.Field>
+          <Form.Submit className="rounded bg-blue-500 px-4 py-2 active:bg-blue-600 text-slate-100 uppercase">
+            Submit
+          </Form.Submit>
+        </Form.Root>
+        <Box tl={form.topLeft} tr={form.topRight} bl={form.botLeft} br={form.botRight} />
+      </div>
+    </main>
   );
 }
 
